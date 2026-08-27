@@ -2,8 +2,19 @@ import { useEffect, useRef } from "react";
 import { useMusic } from "../hooks/useMusic"
 
 export const MusicPlayer = () => {
-    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration } = useMusic();
+    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause } = useMusic();
     const audioRef = useRef(null);
+
+    useEffect(() => {
+        const audio = audioRef.current;
+
+        if (isPlaying) {
+            audio?.play();
+        } else {
+            audio?.pause();
+        }
+
+    }, [isPlaying])
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -38,6 +49,15 @@ export const MusicPlayer = () => {
                     // style={{}}
                 />
                 <span className="time">{formateTime(duration)}</span>
+            </div>
+
+            <div className="controls">
+                <button className="control-btn" onClick={previousTrack}>⏮</button>
+                <button
+                    className="control-btn play-btn"
+                    onClick={() => (isPlaying ? pause() : play())}
+                >{isPlaying ? "❚❚" : "▶"}</button>
+                <button className="control-btn" onClick={nextTrack}>⏭</button>
             </div>
         </div>
     )
