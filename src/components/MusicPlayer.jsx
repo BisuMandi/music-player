@@ -5,6 +5,8 @@ export const MusicPlayer = () => {
     const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume } = useMusic();
     const audioRef = useRef(null);
 
+    const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+
     const handleTimeChange = (e) => {
         const audio = audioRef.current;
 
@@ -80,7 +82,7 @@ export const MusicPlayer = () => {
                 <input
                     type="range" min={0} max={duration} step="0.1" value={currentTime} className="progress-bar"
                     onChange={handleTimeChange}
-                    // style={{}}
+                    style={{"--progress": `${progressPercentage}%`}}
                 />
                 <span className="time">{formateTime(duration)}</span>
             </div>
