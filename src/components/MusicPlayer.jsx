@@ -2,8 +2,23 @@ import { useEffect, useRef } from "react";
 import { useMusic } from "../hooks/useMusic"
 
 export const MusicPlayer = () => {
-    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause } = useMusic();
+    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume } = useMusic();
     const audioRef = useRef(null);
+
+    const handleTimeChange = (e) => {
+        const audio = audioRef.current;
+
+        if (!audio) return;
+
+        const newTime = parseFloat(e.target.value);
+        audio.currentTime = newTime;
+        setCurrentTime(newTime);
+    }
+
+    const handleVolumeChange = (e) => {
+        const newVolume = e.target.value;
+        setVolume(newVolume);
+    }
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -18,6 +33,13 @@ export const MusicPlayer = () => {
 
     useEffect(() => {
         const audio = audioRef.current;
+        if (!audio) return;
+
+        audio.volume = volume;
+    }, [volume]);
+
+    useEffect(() => {
+        const audio = audioRef.current;
 
         if (!audio) return;
 
@@ -25,12 +47,24 @@ export const MusicPlayer = () => {
             setDuration(audio.duration);
         }
 
+        const handleTimeUpdate = () => {
+            setCurrentTime(audio.currentTime);
+        }
+
+        const handleEnded = () => {
+            nextTrack();
+        }
+        
         audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+        audio.addEventListener("timeupdate", handleTimeUpdate);
+        audio.addEventListener("ended", handleEnded);
 
         return () => {
-            audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
+            audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+            audio.removeEventListener("timeupdate", handleTimeUpdate);
+            audio.removeEventListener("ended", handleEnded);
         }
-    }, [currentTrack, setCurrentTime, setDuration]);
+    }, [currentTrack]);
 
     return (
         <div className="music-player">
@@ -45,7 +79,7 @@ export const MusicPlayer = () => {
                 <span className="time">{formateTime(currentTime)}</span>
                 <input
                     type="range" min={0} max={duration} step="0.1" value={currentTime} className="progress-bar"
-                    readOnly
+                    onChange={handleTimeChange}
                     // style={{}}
                 />
                 <span className="time">{formateTime(duration)}</span>
@@ -58,6 +92,11 @@ export const MusicPlayer = () => {
                     onClick={() => (isPlaying ? pause() : play())}
                 >{isPlaying ? "❚❚" : "▶"}</button>
                 <button className="control-btn" onClick={nextTrack}>⏭</button>
+            </div>
+
+            <div className="volume-container">
+                <span className="volume-icon">{volume <= 0 ? "🔇" : "🔊"}</span>
+                <input type="range" min="0" max="1" step="0.1" value={volume} onChange={handleVolumeChange} className="volume-bar" />
             </div>
         </div>
     )
