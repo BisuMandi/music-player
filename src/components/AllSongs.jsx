@@ -1,8 +1,7 @@
-import { MusicContext } from "../contexts/MusicContext";
-import { useContext } from "react";
+import { useMusic } from "../contexts/MusicContext";
 
 export const AllSongs = () => {
-    const { allSongs, currentTrack, currentTrackIndex, handleMusicPlay } = useContext(MusicContext);
+    const { allSongs, currentTrack, currentTrackIndex, handleMusicPlay } = useMusic();
 
     return (
         <div className="all-songs">

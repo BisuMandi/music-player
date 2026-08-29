@@ -1,8 +1,8 @@
-import { useEffect, useRef, useContext } from "react";
-import { MusicContext } from "../contexts/MusicContext";
+import { useEffect, useRef } from "react";
+import { useMusic } from "../contexts/MusicContext";
 
 export const MusicPlayer = () => {
-    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume } = useContext(MusicContext);
+    const { currentTrack, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume } = useMusic();
     const audioRef = useRef(null);
 
     const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
