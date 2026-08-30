@@ -3,7 +3,7 @@ import { useMusic } from "../contexts/MusicContext";
 
 export const Playlists = () => {
     const [newPlaylistName, setNewPlaylistName] = useState("");
-    const { playlists, createPlaylist, allSongs, addSongToPlaylist } = useMusic();
+    const { playlists, createPlaylist, allSongs, addSongToPlaylist, handleMusicPlay, deletePlaylist, currentTrack } = useMusic();
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
@@ -24,6 +24,16 @@ export const Playlists = () => {
         }
     }
 
+    const handleDeletePlaylistConfirm = (playlist) => {
+        if (window.confirm(`Do you want to delete playlist: ${playlist.name}?`))
+            deletePlaylist(playlist.id)
+    }
+
+    const handlePlayFromPlaylist = (song) => {
+        const globalIndex = allSongs.findIndex(s => s.id === song.id);
+        handleMusicPlay(song, globalIndex);
+    }
+
     const handleAddSong = (song) => {
         if (selectedPlaylist) {
             addSongToPlaylist(selectedPlaylist.id, song);
@@ -36,6 +46,7 @@ export const Playlists = () => {
         <div className="playlists">
             <h2>Playlists</h2>
 
+            {/* New Playlist Create Section */}
             <div className="create-playlist">
                 <h3>Create New Playlist</h3>
                 <div className="playlist-form">
@@ -56,11 +67,12 @@ export const Playlists = () => {
                                 <h3>{playlist.name}</h3>
                                 
                                 <div className="playlist-actions">
-                                    <button className="delete-playlist-btn">Delete</button>
+                                    <button className="delete-playlist-btn" onClick={() => handleDeletePlaylistConfirm(playlist)}>Delete</button>
                                 </div>
                             </div>
 
                             <div className="add-song-section">
+                                {/* Song search */}
                                 <div className="search-container">
                                     <input
                                         className="song-search-input"
@@ -81,6 +93,7 @@ export const Playlists = () => {
                                         }}
                                     />
 
+                                    {/* Dropdown for song results */}
                                     {selectedPlaylist?.id === playlist.id && showDropdown && (
                                         <div className="song-dropdown">
                                             {filteredSongs.length === 0 ? (
@@ -96,6 +109,27 @@ export const Playlists = () => {
                                         </div>
                                     )}
                                 </div> 
+                            </div>
+
+                            {/* Added songs of playlist */}
+                            <div className="playlist-songs">
+                                {playlist.songs.length === 0 ? (
+                                    <p className="empty-playlist">No songs in this playlist</p>
+                                ) : (
+                                    playlist.songs.map(song => (
+                                        <div
+                                            key={song.id}
+                                            className={`playlist-song ${currentTrack.id === song.id ? "active" : ""}`}
+                                            onClick={() => handlePlayFromPlaylist(song)}
+                                        >
+                                            <div className="song-info">
+                                                <span className="song-title">{song.title}</span>
+                                                <span className="song-artist">{song.artist}</span>
+                                            </div>
+                                            <span className="song-duration">{song.duration}</span>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>    
                     ))    
