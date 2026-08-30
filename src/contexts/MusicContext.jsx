@@ -63,48 +63,50 @@ export const MusicContext = createContext();
 
 export const MusicProvider = ({ children }) => {
     const [allSongs, setAllSongs] = useState(songs);
-        const [currentTrack, setCurrentTrack] = useState(songs[0]);
-        const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-        const [currentTime, setCurrentTime] = useState(0);
-        const [volume, setVolume] = useState(1);
-        const [duration, setDuration] = useState(0);
-        const [isPlaying, setIsPlaying] = useState(false);
-    
-        const handleMusicPlay = (song, index) => {
-            setCurrentTrack(song);
-            setCurrentTrackIndex(index);
+    const [currentTrack, setCurrentTrack] = useState(songs[0]);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [duration, setDuration] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+
+    const handleMusicPlay = (song, index) => {
+        setCurrentTrack(song);
+        setCurrentTrackIndex(index);
+        setIsPlaying(false);
+    }
+
+    const nextTrack = () => {
+        setCurrentTrackIndex(prev => {
+            const nextIndex = (prev + 1) % allSongs.length;
+            setCurrentTrack(allSongs[nextIndex]);
             setIsPlaying(false);
-        }
-    
-        const nextTrack = () => {
-            setCurrentTrackIndex(prev => {
-                const nextIndex = (prev + 1) % allSongs.length;
-                setCurrentTrack(allSongs[nextIndex]);
-                setIsPlaying(false);
-                return nextIndex;
-            })
-        }
-    
-        const previousTrack = () => {
-            setCurrentTrackIndex(prev => {
-                const nextIndex = prev <= 0 ? (allSongs.length - 1) : (prev - 1);
-                setCurrentTrack(allSongs[nextIndex]);
-                setIsPlaying(false);
-                return nextIndex;
-            })
-        }
-    
-        const play = () => setIsPlaying(true);
-    
-        const pause = () => setIsPlaying(false);
-    
-        const formateTime = time => {
-            if (isNaN(time) || time === undefined) return "00:00";
-    
-            const minutes = Math.floor(time / 60);
-            const seconds = Math.floor(time % 60);
-    
-            return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+            return nextIndex;
+        })
+    }
+
+    const previousTrack = () => {
+        setCurrentTrackIndex(prev => {
+            const nextIndex = prev <= 0 ? (allSongs.length - 1) : (prev - 1);
+            setCurrentTrack(allSongs[nextIndex]);
+            setIsPlaying(false);
+            return nextIndex;
+        })
+    }
+
+    const play = () => setIsPlaying(true);
+
+    const pause = () => setIsPlaying(false);
+
+
+    const formateTime = time => {
+        if (isNaN(time) || time === undefined) return "00:00";
+
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+
+        return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
     }
     
     return (
