@@ -82,6 +82,16 @@ export const MusicProvider = ({ children }) => {
         setPlaylists(prev => [...prev, newPlaylist]);
     }
 
+    const addSongToPlaylist = (playlistId, song) => {
+        setPlaylists(prev => prev.map(playlist => {
+            if (playlist.id === playlistId) {
+                return {...playlist, songs: [...playlist.songs, song]}
+            } else {
+                return playlist;
+            }
+        }))
+    }
+
     const handleMusicPlay = (song, index) => {
         setCurrentTrack(song);
         setCurrentTrackIndex(index);
@@ -122,7 +132,7 @@ export const MusicProvider = ({ children }) => {
     
     return (
         <MusicContext.Provider
-            value={{ allSongs, currentTrack, currentTrackIndex, handleMusicPlay, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume, playlists, setPlaylists, createPlaylist }}
+            value={{ allSongs, currentTrack, currentTrackIndex, handleMusicPlay, formateTime, currentTime, setCurrentTime, duration, setDuration, nextTrack, previousTrack, isPlaying, play, pause, volume, setVolume, playlists, setPlaylists, createPlaylist, addSongToPlaylist }}
         >
             {children}
         </MusicContext.Provider>
