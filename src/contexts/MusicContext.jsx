@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from "react"
+import { useState, createContext, useContext, useEffect } from "react"
 
 const songs = [
     {
@@ -71,6 +71,22 @@ export const MusicProvider = ({ children }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [playlists, setPlaylists] = useState([]);
 
+    useEffect(() => {
+        const savedPlaylists = localStorage.getItem("musicPlayerPlaylists");
+
+        if (savedPlaylists) {
+            setPlaylists(JSON.parse(savedPlaylists));
+        }
+            
+    }, []);
+
+    useEffect(() => {
+        if (playlists.length > 0) {
+            localStorage.setItem("musicPlayerPlaylists", JSON.stringify(playlists));
+        } else {
+            localStorage.removeItem("musicPlayerPlaylists");
+        }
+    }, [playlists]);
 
     const createPlaylist = name => {
         const newPlaylist = {
