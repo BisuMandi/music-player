@@ -579,6 +579,11 @@ body {
   border-radius: 12px;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.playlist-item:last-child {
+  margin-bottom: 0px;
 }
 
 .playlist-header {
