@@ -15,7 +15,12 @@ export const Playlists = () => {
 
         return (matches && !isAlreadyInPlaylist);
     });
-
+    
+    const handleKeyDown = e => {
+        if (e.key === "Enter")
+            handleCreatePlaylist();
+    }
+    
     const handleCreatePlaylist = () => {
         if (newPlaylistName.trim()) {
             createPlaylist(newPlaylistName.trim());
@@ -50,7 +55,7 @@ export const Playlists = () => {
             <div className="create-playlist">
                 <h3>Create New Playlist</h3>
                 <div className="playlist-form">
-                    <input type="text" placeholder="Enter playlist name .." className="playlist-input" value={newPlaylistName} onChange={e => setNewPlaylistName(e.target.value)} />
+                    <input type="text" placeholder="Enter playlist name .." className="playlist-input" value={newPlaylistName} onChange={e => setNewPlaylistName(e.target.value)} onKeyDown={handleKeyDown} />
 
                     <button className="create-btn" onClick={handleCreatePlaylist} >Create</button>
                 </div>
