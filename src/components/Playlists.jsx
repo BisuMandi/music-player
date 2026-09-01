@@ -20,7 +20,7 @@ export const Playlists = () => {
         if (e.key === "Enter")
             handleCreatePlaylist();
     }
-    
+
     const handleCreatePlaylist = () => {
         if (newPlaylistName.trim()) {
             createPlaylist(newPlaylistName.trim());
@@ -39,6 +39,12 @@ export const Playlists = () => {
         handleMusicPlay(song, globalIndex);
     }
 
+    const handleKeyDownAddSong = e => {
+        if (e.key === "Enter" && filteredSongs.length > 0) {
+            handleAddSong(filteredSongs[0]);
+        }
+    }
+
     const handleAddSong = (song) => {
         if (selectedPlaylist) {
             addSongToPlaylist(selectedPlaylist.id, song);
@@ -46,6 +52,7 @@ export const Playlists = () => {
             setShowDropdown(false);
         }
     }
+
 
     return (
         <div className="playlists">
@@ -96,6 +103,8 @@ export const Playlists = () => {
                                             setSelectedPlaylist(playlist);
                                             setShowDropdown(e.target.value.length > 0);
                                         }}
+
+                                        onKeyDown={handleKeyDownAddSong}
                                     />
 
                                     {/* Dropdown for song results */}
@@ -124,7 +133,7 @@ export const Playlists = () => {
                                     playlist.songs.map(song => (
                                         <div
                                             key={song.id}
-                                            className={`playlist-song ${currentTrack.id === song.id ? "active" : ""}`}
+                                            className={`playlist-song ${currentTrack?.id === song.id ? "active" : ""}`}
                                             onClick={() => handlePlayFromPlaylist(song)}
                                         >
                                             <div className="song-info">
